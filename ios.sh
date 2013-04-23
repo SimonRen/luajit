@@ -37,6 +37,10 @@ mv $LUAJIT/src/libluajit.a $BUILD_DIR/libluajit32.a
 
 libtool -o $BUILD_DIR/libluajit2.a $BUILD_DIR/*.a 2> /dev/null
 
+make -j -C $LUAJIT HOST_CFLAGS="-arch i386" HOST_LDFLAGS="-arch i386" TARGET_SYS=iOS TARGET=x86 clean
+make -j -C $LUAJIT HOST_CFLAGS="-arch i386" HOST_LDFLAGS="-arch i386" TARGET_SYS=iOS TARGET=x86 TARGET_FLAGS="-arch i386"
+mv $LUAJIT/src/libluajit.a $BUILD_DIR/libluajitx86.a
+
 mkdir -p $BUILD_DIR/Headers
 cp $LUAJIT/src/lua.h $BUILD_DIR/Headers
 cp $LUAJIT/src/lauxlib.h $BUILD_DIR/Headers
