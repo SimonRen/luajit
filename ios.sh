@@ -2,8 +2,8 @@
 
 LUAJIT=./
 DEVDIR=`xcode-select -print-path`/Platforms
-IOSVER=iPhoneOS5.0.sdk
-SIMVER=iPhoneSimulator5.0.sdk
+IOSVER=iPhoneOS6.1.sdk
+SIMVER=iPhoneSimulator6.1.sdk
 IOSDIR=$DEVDIR/iPhoneOS.platform/Developer
 SIMDIR=$DEVDIR/iPhoneSimulator.platform/Developer
 IOSBIN=$IOSDIR/usr/bin/
@@ -35,11 +35,15 @@ make -j -C $LUAJIT HOST_CFLAGS="-arch i386" HOST_LDFLAGS="-arch i386" TARGET_SYS
 
 mv $LUAJIT/src/libluajit.a $BUILD_DIR/libluajit32.a
 
-libtool -o $BUILD_DIR/libluajit2.a $BUILD_DIR/*.a 2> /dev/null
+libtool -o $BUILD_DIR/libluajit.a $BUILD_DIR/*.a 2> /dev/null
 
 make -j -C $LUAJIT HOST_CFLAGS="-arch i386" HOST_LDFLAGS="-arch i386" TARGET_SYS=iOS TARGET=x86 clean
 make -j -C $LUAJIT HOST_CFLAGS="-arch i386" HOST_LDFLAGS="-arch i386" TARGET_SYS=iOS TARGET=x86 TARGET_FLAGS="-arch i386"
 mv $LUAJIT/src/libluajit.a $BUILD_DIR/libluajitx86.a
+
+make -j -C $LUAJIT BUILDMODE=dynamic HOST_CFLAGS="-arch i386" HOST_LDFLAGS="-arch i386" TARGET_SYS=iOS TARGET=x86 LUAJIT_SO=libluajit.dylib TARGET_DYLIBPATH=libluajit.dylib clean
+make -j -C $LUAJIT BUILDMODE=dynamic HOST_CFLAGS="-arch i386" HOST_LDFLAGS="-arch i386" TARGET_SYS=iOS TARGET=x86 LUAJIT_SO=libluajit.dylib TARGET_DYLIBPATH=libluajit.dylib amalg CROSS=$SIMBIN TARGET_FLAGS="-isysroot $SIMDIR/SDKs/$SIMVER -arch i386"
+mv $LUAJIT/src/libluajit.dylib $BUILD_DIR/libluajit.dylib
 
 mkdir -p $BUILD_DIR/Headers
 cp $LUAJIT/src/lua.h $BUILD_DIR/Headers
