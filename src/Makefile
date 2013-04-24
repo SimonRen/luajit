@@ -185,7 +185,8 @@ TARGET_CC= $(STATIC_CC)
 TARGET_STCC= $(STATIC_CC)
 TARGET_DYNCC= $(DYNAMIC_CC)
 TARGET_LD= $(CROSS)$(CC)
-TARGET_AR= $(CROSS)ar rcus
+#TARGET_AR= $(CROSS)ar rcus $(AR_FLAGS)
+TARGET_AR= $(CROSS)ar rcus $(AR_FLAGS)
 TARGET_STRIP= $(CROSS)strip
 
 TARGET_SONAME= libluajit-$(ABIVER).so.$(MAJVER)
@@ -313,10 +314,10 @@ else
     endif
   endif
   ifeq (Linux,$(TARGET_SYS))
-    TARGET_XLIBS+= -ldl
+    #TARGET_XLIBS+= -ldl
   endif
   ifeq (GNU/kFreeBSD,$(TARGET_SYS))
-    TARGET_XLIBS+= -ldl
+    #TARGET_XLIBS+= -ldl
   endif
 endif
 endif
@@ -663,14 +664,14 @@ $(LUAJIT_A): $(LJVMCORE_O)
 
 # The dependency on _O, but linking with _DYNO is intentional.
 $(LUAJIT_SO): $(LJVMCORE_O)
-	$(E) "DYNLINK   $@"
-	$(Q)$(TARGET_LD) $(TARGET_ASHLDFLAGS) -o $@ $(LJVMCORE_DYNO) $(TARGET_ALIBS)
-	$(Q)$(TARGET_STRIP) $@
+#	$(E) "DYNLINK   $@"
+#	$(Q)$(TARGET_LD) $(TARGET_ASHLDFLAGS) -o $@ $(LJVMCORE_DYNO) $(TARGET_ALIBS)
+#	$(Q)$(TARGET_STRIP) $@
 
 $(LUAJIT_T): $(TARGET_O) $(LUAJIT_O) $(TARGET_DEP)
-	$(E) "LINK      $@"
-	$(Q)$(TARGET_LD) $(TARGET_ALDFLAGS) -o $@ $(LUAJIT_O) $(TARGET_O) $(TARGET_ALIBS)
-	$(Q)$(TARGET_STRIP) $@
+#	$(E) "LINK      $@"
+#	$(Q)$(TARGET_LD) $(TARGET_ALDFLAGS) -o $@ $(LUAJIT_O) $(TARGET_O) $(TARGET_ALIBS)
+#	$(Q)$(TARGET_STRIP) $@
 	$(E) "OK        Successfully built LuaJIT"
 
 ##############################################################################
