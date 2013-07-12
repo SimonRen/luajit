@@ -72,10 +72,10 @@ CCWARN= -Wall
 # as dynamic mode.
 #
 # Mixed mode creates a static + dynamic library and a statically linked luajit.
-BUILDMODE= mixed
+#BUILDMODE= mixed
 #
 # Static mode creates a static library and a statically linked luajit.
-#BUILDMODE= static
+BUILDMODE= static
 #
 # Dynamic mode creates a dynamic library and a dynamically linked luajit.
 # Note: this executable will only run when the library is installed!
@@ -185,7 +185,6 @@ TARGET_CC= $(STATIC_CC)
 TARGET_STCC= $(STATIC_CC)
 TARGET_DYNCC= $(DYNAMIC_CC)
 TARGET_LD= $(CROSS)$(CC)
-#TARGET_AR= $(CROSS)ar rcus $(AR_FLAGS)
 TARGET_AR= $(CROSS)ar rcus $(AR_FLAGS)
 TARGET_STRIP= $(CROSS)strip
 
@@ -196,7 +195,7 @@ TARGET_DLLNAME= lua$(NODOTABIVER).dll
 TARGET_XSHLDFLAGS= -shared -fPIC -Wl,-soname,$(TARGET_SONAME)
 TARGET_DYNXLDOPTS=
 
-TARGET_LFSFLAGS= -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+TARGET_LFSFLAGr= -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
 TARGET_XCFLAGS= $(TARGET_LFSFLAGS) -U_FORTIFY_SOURCE
 TARGET_XLDFLAGS=
 TARGET_XLIBS= -lm
@@ -651,6 +650,7 @@ $(LUAJIT_O):
 
 $(HOST_O): %.o: %.c
 	$(E) "HOSTCC    $@"
+	$(E) "$(HOST_CC) $(HOST_ACFLAGS) -c -o $@ $<"
 	$(Q)$(HOST_CC) $(HOST_ACFLAGS) -c -o $@ $<
 
 include Makefile.dep
@@ -665,9 +665,9 @@ $(LUAJIT_A): $(LJVMCORE_O)
 
 # The dependency on _O, but linking with _DYNO is intentional.
 $(LUAJIT_SO): $(LJVMCORE_O)
-#	$(E) "DYNLINK   $@"
-#	$(Q)$(TARGET_LD) $(TARGET_ASHLDFLAGS) -o $@ $(LJVMCORE_DYNO) $(TARGET_ALIBS)
-#	$(Q)$(TARGET_STRIP) $@
+	$(E) "DYNLINK   $@"
+	$(Q)$(TARGET_LD) $(TARGET_ASHLDFLAGS) -o $@ $(LJVMCORE_DYNO) $(TARGET_ALIBS)
+	$(Q)$(TARGET_STRIP) $@
 
 $(LUAJIT_T): $(TARGET_O) $(LUAJIT_O) $(TARGET_DEP)
 #	$(E) "LINK      $@"
